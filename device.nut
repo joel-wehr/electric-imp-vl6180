@@ -20,6 +20,7 @@ rangeFinder <- null;
 
 
 imp.onidle(function() {
+    server.log("Initializing...");
     rangeFinder = RangeFinder(i2c, I2C_ADDRESS);
 
     imp.sleep(0.1); // delay .1s
@@ -131,12 +132,10 @@ class RangeFinder {
     _i2c = null;
 
 
-    constructor(i2c, _address) {
-        this._address = registerAddr ;
+    constructor(i2c, address) {
+        this._address = address;
         this._i2c = i2c;
 
-        this._i2c.write((registerAddr >> 8) & 0xFF); // MSB of register address
-        Wire.write(registerAddr & 0xFF); // LSB of register address
         if (this.getRegister(SYSTEM_FRESH_OUT_OF_RESET) != 1) {
             throw "Failed to init.";
         }
@@ -302,13 +301,13 @@ class RangeFinder {
 
     function getIdentification() {
         return {
-            model: this.getRegister(IDENTIFICATION_MODEL_ID),
-            modelRevMajor: this.getRegister(IDENTIFICATION_MODEL_REV_MAJOR),
-            modelRevMinor: this.getRegister(IDENTIFICATION_MODEL_REV_MINOR),
-            moduleRevMajor: this.getRegister(IDENTIFICATION_MODULE_REV_MAJOR),
-            moduleRevMinor: this.getRegister(IDENTIFICATION_MODULE_REV_MINOR),
-            date: this.getRegister16bit(IDENTIFICATION_DATE),
-            time: this.getRegister16bit(IDENTIFICATION_TIME)
+            model = this.getRegister(IDENTIFICATION_MODEL_ID),
+            modelRevMajor = this.getRegister(IDENTIFICATION_MODEL_REV_MAJOR),
+            modelRevMinor = this.getRegister(IDENTIFICATION_MODEL_REV_MINOR),
+            moduleRevMajor = this.getRegister(IDENTIFICATION_MODULE_REV_MAJOR),
+            moduleRevMinor = this.getRegister(IDENTIFICATION_MODULE_REV_MINOR),
+            date = this.getRegister16bit(IDENTIFICATION_DATE),
+            time = this.getRegister16bit(IDENTIFICATION_TIME)
         };
     }
 }
